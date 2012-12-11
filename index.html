@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- saved from url=(0013)about:internet -->
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name = "viewport" content = "initial-scale = 1.0, user-scalable = no">
+<link rel="apple-touch-icon-precomposed" href="assets/icon57.png" />
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/icon72.png" />
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/icon114.png" />
+<link rel="apple-touch-startup-image" href="assets/bg.png" />
+<title>Ajax Test</title>
+
+<style>
+
+body { margin: 0px; 
+padding: 0px; 
+text-align: center; 
+background: #000; 
+}
+
+html div { 
+font-family: Arial; 
+font-size: 12px; 
+color: #ddd; 
+}
+
+#wrapper { 
+width: 480px; 
+height: 320px; 
+background: rgb(36,37,39) url('assets/bg.png') no-repeat 0 0; 
+padding: 0; 
+border: 0; 
+margin: 0px auto; 
+position: relative; 
+}
+
+.header {
+width: 480px;
+height: 59px;
+line-height: 59px;
+font-size: 20px;
+font-weight: bold;
+text-transform: uppercase;
+}
+
+#myinput {
+width: 250px;
+height: 25px;
+border: 0;
+padding: 0;
+background: transparent;
+position: absolute;
+top: 100px;
+left: 115px;
+font-family: Arial; 
+font-size: 16px; 
+color: #121212; 
+}
+
+#mybutton {
+width: 260px;
+height: 40px;
+border: 0;
+padding: 0;
+background: transparent;
+position: absolute;
+top: 168px;
+left: 110px;
+cursor: pointer;
+}
+
+#ajaxdiv {
+width: 400px;
+height: auto;
+border: 0;
+padding: 0;
+position: absolute;
+top: 240px;
+left: 40px;
+font-family: Arial; 
+font-size: 16px; 
+}
+
+</style>
+
+<script>
+
+/*
+
+var OrientationPlugin = function() {};
+OrientationPlugin.prototype.setAllowed = function(options) {    
+PhoneGap.exec(null, null, "Orientation", "setAllowed", options);
+};
+OrientationPlugin.install = function(){	
+if(!window.plugins)		
+window.plugins = {};	
+window.plugins.orientation = new OrientationPlugin();
+}
+// Add to PhoneGap constructor 
+PhoneGap.addConstructor(OrientationPlugin.install);
+window.plugins.orientation.setAllowed([{pp:false, pd:false, ll:true, lr:false}]);
+
+*/
+
+var online = 0;
+
+document.write('<script src="http://www.biznetkc.com/public/apps/ajax-test/online.js"></scr'+'ipt>');
+
+function ajaxpage(url,div){
+if(div == 'ajaxdiv'){
+document.getElementById(div).innerHTML = 'Loading ...';
+}
+var page_request = false
+if (window.XMLHttpRequest)
+page_request = new XMLHttpRequest()
+else if (window.ActiveXObject){
+try {
+page_request = new ActiveXObject("Msxml2.XMLHTTP")
+} 
+catch (e){
+try{
+page_request = new ActiveXObject("Microsoft.XMLHTTP")
+}
+catch (e){}
+}
+}
+else
+return false
+page_request.onreadystatechange=function(){
+loadpage(page_request,div)
+}
+page_request.open('GET', url, true)
+page_request.send(null)
+}
+
+function loadpage(page_request,div){
+if (page_request.readyState == 4 && (page_request.status==200 || window.location.href.indexOf("http")==-1)){
+var myHTML = page_request.responseText;
+document.getElementById(div).innerHTML = myHTML;
+}
+}
+
+function Init(){
+if(online == 0){
+document.getElementById('ajaxdiv').innerHTML = 'Status: Offline';
+}
+if(online > 0){
+document.getElementById('ajaxdiv').innerHTML = 'Status: Online';
+}
+var div = 'ajaxdiv';
+var myInput = document.getElementById('myinput');
+document.getElementById('mybutton').onclick = function(){
+if(myInput.value == "" || myInput.value == null){
+alert('Please enter text before submitting');
+return false;
+}
+if(online == 0){
+alert('No internet connection available');
+return false;
+}
+var url = 'http://www.biznetkc.com/public/apps/ajax-test/reply.php?var='+myInput.value;
+ajaxpage(url,div);
+return false;
+}
+}
+
+window.onload = function(){
+Init();
+document.addEventListener('touchmove', function (e) {e.preventDefault();}, false);
+}
+
+</script>
+
+</head>
+<body>
+<div id="wrapper">
+<div class="header">ajax test</div>
+<input id="myinput" type="text">
+<div id="mybutton"></div>
+<div id="ajaxdiv"></div>
+</div>
+</body>
+</html>
